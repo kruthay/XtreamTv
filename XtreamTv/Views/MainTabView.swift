@@ -37,11 +37,7 @@ struct MainTabView: View {
                 .tabItem {
                     Label("Favorites", systemImage: "star.fill")
                 }
-            
-            SettingsView()
-                .tabItem {
-                    Label("Settings", systemImage: "gear")
-                }
+        
         }
     }
 }

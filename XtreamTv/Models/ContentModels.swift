@@ -17,7 +17,7 @@ protocol ContentItem: Identifiable {
 }
 
 // Live TV channel model
-struct Channel: ContentItem, Equatable {
+struct Channel: ContentItem, Equatable, Codable {
     let id: String
     let name: String
     let streamID: String
@@ -42,7 +42,7 @@ struct Channel: ContentItem, Equatable {
 }
 
 // VOD movie model
-struct Movie: ContentItem, Equatable {
+struct Movie: ContentItem, Equatable, Codable {
     let id: String
     let name: String
     let streamID: String
@@ -67,7 +67,7 @@ struct Movie: ContentItem, Equatable {
 }
 
 // TV Series model
-struct Series: ContentItem, Equatable {
+struct Series: ContentItem, Equatable, Codable {
     let id: String
     let name: String
     let seriesID: String
@@ -92,7 +92,7 @@ struct Series: ContentItem, Equatable {
 }
 
 // Content category model
-struct Category: Identifiable, Hashable {
+struct Category: Identifiable, Hashable, Codable {
     let id: String
     let name: String
     let type: CategoryType

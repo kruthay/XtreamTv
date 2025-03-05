@@ -154,17 +154,15 @@ struct SeriesDetailView: View {
                 viewModel.toggleFavorite(seriesID: series.id)
                 isFavorite.toggle()
             }) {
-                Label(
-                    isFavorite ? "Remove from Favorites" : "Add to Favorites",
-                    systemImage: isFavorite ? "star.fill" : "star"
-                )
-                .foregroundColor(isFavorite ? .yellow : .primary)
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(Color(.systemBackground))
-                .cornerRadius(10)
+                Image(systemName: isFavorite ? "star.fill" : "star")
+                    .foregroundColor(isFavorite ? .yellow : .primary)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color(.systemBackground))
+                    .cornerRadius(10)
             }
             .padding(.horizontal)
+
             
             // Season picker
             if let seasons = seriesInfo?.episodes, !seasons.isEmpty {

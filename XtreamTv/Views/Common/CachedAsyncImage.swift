@@ -61,6 +61,7 @@ struct CachedAsyncImage<Content: View, Placeholder: View>: View {
             isLoading = false
             return
         }
+        print(url)
         
         // Load from network
         cancellable = ImageCache.shared.loadImage(from: url)

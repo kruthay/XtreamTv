@@ -1,10 +1,4 @@
-//
-//  SeriesViewModel.swift
-//  XtreamTv
-//
-//  Created by Kruthay Kumar Reddy Donapati on 3/4/25.
-//
-
+// SeriesViewModel.swift
 import Foundation
 import Combine
 
@@ -20,6 +14,11 @@ class SeriesViewModel: ObservableObject {
     private let userPreferences: UserPreferencesManager
     private let mediaStreamProvider: MediaStreamProvider
     
+    // Cache
+    private let cacheManager: DiskCacheManager
+    private let seriesCacheKey = "cached_series"
+    private let categoriesCacheKey = "cached_series_categories"
+    
     // Cancellables
     private var cancellables = Set<AnyCancellable>()
     
@@ -32,6 +31,15 @@ class SeriesViewModel: ObservableObject {
         self.userPreferences = userPreferences
         self.mediaStreamProvider = mediaStreamProvider
         
+        // Initialize cache manager (1-day expiration, adjust as needed)
+        self.cacheManager = DiskCacheManager(
+            cacheName: "SeriesViewModelCache",
+            expirationInterval: 24 * 60 * 60
+        )
+        
+        // Attempt to load from cache first
+        loadFromCache()
+        
         // Observe repository state
         setupBindings()
     }
@@ -39,10 +47,18 @@ class SeriesViewModel: ObservableObject {
     private func setupBindings() {
         // Bind to repository state
         seriesRepository.$series
-            .assign(to: &$seriesList)
+            .sink { [weak self] newSeries in
+                self?.seriesList = newSeries
+                self?.saveSeriesToCache(newSeries)
+            }
+            .store(in: &cancellables)
         
         seriesRepository.$categories
-            .assign(to: &$categories)
+            .sink { [weak self] newCategories in
+                self?.categories = newCategories
+                self?.saveCategoriesToCache(newCategories)
+            }
+            .store(in: &cancellables)
         
         seriesRepository.$isLoading
             .assign(to: &$isLoading)
@@ -51,9 +67,42 @@ class SeriesViewModel: ObservableObject {
             .assign(to: &$error)
     }
     
+    // MARK: - Cache Methods
+    
+    private func loadFromCache() {
+        // Load cached categories
+        if let cachedCategories: [Category] = try? cacheManager.load(forKey: categoriesCacheKey) {
+            self.categories = cachedCategories
+        }
+        // Load cached series
+        if let cachedSeries: [Series] = try? cacheManager.load(forKey: seriesCacheKey) {
+            self.seriesList = cachedSeries
+        }
+    }
+    
+    private func saveCategoriesToCache(_ categories: [Category]) {
+        try? cacheManager.save(object: categories, forKey: categoriesCacheKey)
+    }
+    
+    private func saveSeriesToCache(_ series: [Series]) {
+        try? cacheManager.save(object: series, forKey: seriesCacheKey)
+    }
+    
     // MARK: - Public Methods
     
     func loadData() async {
+        // If we already have data and aren't currently loading, show cached data
+        // but refresh in background
+        if !seriesList.isEmpty && !categories.isEmpty && !isLoading {
+            DispatchQueue.global().asyncAfter(deadline: .now() + 0.5) {
+                Task {
+                    await self.seriesRepository.loadData()
+                }
+            }
+            return
+        }
+        
+        // Otherwise, load fresh data
         await seriesRepository.loadData()
     }
     
@@ -77,10 +126,7 @@ class SeriesViewModel: ObservableObject {
         return seriesRepository.getCategoryName(for: categoryID)
     }
     
-    func createMediaItem(
-        from episode: Episode,
-        seriesName: String
-    ) -> MediaItem? {
+    func createMediaItem(from episode: Episode, seriesName: String) -> MediaItem? {
         return MediaItem.fromEpisode(
             episode: episode,
             seriesName: seriesName,
@@ -99,5 +145,8 @@ class SeriesViewModel: ObservableObject {
     func addToRecentlyWatched(seriesID: String) {
         userPreferences.addToRecentlyWatched(contentID: seriesID)
     }
+    
+    func clearCache() {
+        cacheManager.removeAll()
+    }
 }
-

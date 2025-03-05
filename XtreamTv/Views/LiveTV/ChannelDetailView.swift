@@ -101,11 +101,12 @@ struct ChannelDetailView: View {
                         viewModel.toggleFavorite(channelID: channel.id)
                         isFavorite.toggle()
                     }) {
-                        Label(
-                            isFavorite ? "Remove from Favorites" : "Add to Favorites",
-                            systemImage: isFavorite ? "star.fill" : "star"
-                        )
-                        .foregroundColor(isFavorite ? .yellow : .primary)
+                        Image(systemName: isFavorite ? "star.fill" : "star")
+                            .foregroundColor(isFavorite ? .yellow : .primary)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color(.systemBackground))
+                            .cornerRadius(10)
                     }
                     
                     if !isPlaying {

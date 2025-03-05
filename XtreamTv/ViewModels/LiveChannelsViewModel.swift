@@ -1,10 +1,3 @@
-//
-//  LiveChannelsViewModel.swift
-//  XtreamTv
-//
-//  Created by Kruthay Kumar Reddy Donapati on 3/4/25.
-//
-
 import Foundation
 import Combine
 
@@ -20,6 +13,11 @@ class LiveChannelsViewModel: ObservableObject {
     private let userPreferences: UserPreferencesManager
     private let mediaStreamProvider: MediaStreamProvider
     
+    // Cache
+    private let cacheManager: DiskCacheManager
+    private let categoriesCacheKey = "cached_live_categories"
+    private let channelsCacheKey   = "cached_live_channels"
+    
     // Cancellables
     private var cancellables = Set<AnyCancellable>()
     
@@ -32,17 +30,34 @@ class LiveChannelsViewModel: ObservableObject {
         self.userPreferences = userPreferences
         self.mediaStreamProvider = mediaStreamProvider
         
+        // Initialize a disk cache manager (1-day expiration or whatever you prefer)
+        self.cacheManager = DiskCacheManager(
+            cacheName: "LiveChannelsViewModelCache",
+            expirationInterval: 24 * 60 * 60
+        )
+        
+        // Attempt to load from cache
+        loadFromCache()
+        
         // Observe repository state
         setupBindings()
     }
     
     private func setupBindings() {
-        // Bind to repository state
+        // Bind to repository state and update local Published properties
         channelsRepository.$channels
-            .assign(to: &$channels)
+            .sink { [weak self] channels in
+                self?.channels = channels
+                self?.saveChannelsToCache(channels)
+            }
+            .store(in: &cancellables)
         
         channelsRepository.$categories
-            .assign(to: &$categories)
+            .sink { [weak self] categories in
+                self?.categories = categories
+                self?.saveCategoriesToCache(categories)
+            }
+            .store(in: &cancellables)
         
         channelsRepository.$isLoading
             .assign(to: &$isLoading)
@@ -51,9 +66,43 @@ class LiveChannelsViewModel: ObservableObject {
             .assign(to: &$error)
     }
     
+    // MARK: - Cache Methods
+    
+    private func loadFromCache() {
+        // Load cached categories
+        if let cachedCategories: [Category] = try? cacheManager.load(forKey: categoriesCacheKey) {
+            self.categories = cachedCategories
+        }
+        
+        // Load cached channels
+        if let cachedChannels: [Channel] = try? cacheManager.load(forKey: channelsCacheKey) {
+            self.channels = cachedChannels
+        }
+    }
+    
+    private func saveCategoriesToCache(_ categories: [Category]) {
+        try? cacheManager.save(object: categories, forKey: categoriesCacheKey)
+    }
+    
+    private func saveChannelsToCache(_ channels: [Channel]) {
+        try? cacheManager.save(object: channels, forKey: channelsCacheKey)
+    }
+    
     // MARK: - Public Methods
     
     func loadData() async {
+        // If we already have data and aren't currently loading, use what we have
+        if !channels.isEmpty && !categories.isEmpty && !isLoading {
+            // Still refresh from network in background
+            DispatchQueue.global().asyncAfter(deadline: .now() + 0.5) {
+                Task {
+                    await self.channelsRepository.loadData()
+                }
+            }
+            return
+        }
+        
+        // Otherwise, load fresh data
         await channelsRepository.loadData()
     }
     
@@ -91,5 +140,8 @@ class LiveChannelsViewModel: ObservableObject {
     func addToRecentlyWatched(channelID: String) {
         userPreferences.addToRecentlyWatched(contentID: channelID)
     }
+    
+    func clearCache() {
+        cacheManager.removeAll()
+    }
 }
-
