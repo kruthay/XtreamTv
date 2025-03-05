@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Basic App Information -->
+    <key>CFBundleDevelopmentRegion</key>
+    <string>$(DEVELOPMENT_LANGUAGE)</string>
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
+    <key>CFBundleIdentifier</key>
+    <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>$(PRODUCT_NAME)</string>
+    <key>CFBundlePackageType</key>
+    <string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
+    <key>CFBundleShortVersionString</key>
+    <string>$(MARKETING_VERSION)</string>
+    <key>CFBundleVersion</key>
+    <string>$(CURRENT_PROJECT_VERSION)</string>
+    
+    <!-- Special Permissions and Features for IPTV -->
+    
+    <!-- Background Modes for Audio Playback -->
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>audio</string>
+        <string>fetch</string>
+    </array>
+    
+    <!-- Picture in Picture Support -->
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+        <string>UIInterfaceOrientationLandscapeLeft</string>
+        <string>UIInterfaceOrientationLandscapeRight</string>
+        <string>UIInterfaceOrientationPortraitUpsideDown</string>
+    </array>
+    
+    <!-- Allow Arbitrary Network Loads -->
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
+    
+    <!-- Local Network Usage Description -->
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>This app needs access to your local network to discover and connect to IPTV sources on your network.</string>
+    
+    <!-- Prevent Device from Sleeping During Playback -->
+    <key>UIRequiresPersistentWiFi</key>
+    <true/>
+    
+    <!-- Allow External Accessory Communication -->
+    <key>UISupportedExternalAccessoryProtocols</key>
+    <array>
+        <string>com.hdmi.control</string>
+    </array>
+    
+    <!-- Enable AirPlay -->
+    <key>UIViewControllerBasedStatusBarAppearance</key>
+    <false/>
+    
+    <!-- External Player Communication -->
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+        <string>vlc</string>
+        <string>infuse</string>
+        <string>nplayer</string>
+        <string>mx-video</string>
+    </array>
+    
+    <!-- Audio/Video Media Types -->
+    <key>UTExportedTypeDeclarations</key>
+    <array>
+        <dict>
+            <key>UTTypeConformsTo</key>
+            <array>
+                <string>public.movie</string>
+                <string>public.audiovisual-content</string>
+            </array>
+            <key>UTTypeDescription</key>
+            <string>IPTV Stream</string>
+            <key>UTTypeIdentifier</key>
+            <string>com.youcompany.iptv.stream</string>
+            <key>UTTypeTagSpecification</key>
+            <dict>
+                <key>public.filename-extension</key>
+                <array>
+                    <string>m3u</string>
+                    <string>m3u8</string>
+                    <string>ts</string>
+                </array>
+                <key>public.mime-type</key>
+                <array>
+                    <string>application/vnd.apple.mpegurl</string>
+                    <string>video/mp2t</string>
+                </array>
+            </dict>
+        </dict>
+    </array>
+    
+    <!-- Privacy Descriptions -->
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>This app needs access to your photo library to save screenshots or thumbnails.</string>
+    
+    <!-- App Settings -->
+    <key>UIUserInterfaceStyle</key>
+    <string>Automatic</string>
+    
+    <key>UIApplicationSceneManifest</key>
+    <dict>
+        <key>UIApplicationSupportsMultipleScenes</key>
+        <false/>
+        <key>UISceneConfigurations</key>
+        <dict>
+            <key>UIWindowSceneSessionRoleApplication</key>
+            <array>
+                <dict>
+                    <key>UISceneConfigurationName</key>
+                    <string>Default Configuration</string>
+                    <key>UISceneDelegateClassName</key>
+                    <string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
+                </dict>
+            </array>
+        </dict>
+    </dict>
+    
+    <!-- Performance Settings -->
+    <key>UIApplicationSupportsIndirectInputEvents</key>
+    <true/>
+    
+    <!-- Appearance Settings -->
+    <key>UILaunchStoryboardName</key>
+    <string>LaunchScreen</string>
+    
+    <!-- App Store Settings -->
+    <key>ITSAppUsesNonExemptEncryption</key>
+    <false/>
+</dict>
+</plist>

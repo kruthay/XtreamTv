@@ -10,9 +10,22 @@
 		87386D972D77D36400C17AD8 /* XtreamTv.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XtreamTv.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		87386E9B2D77EB4200C17AD8 /* Exceptions for "XtreamTv" folder in "XtreamTv" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 87386D962D77D36400C17AD8 /* XtreamTv */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		87386D992D77D36400C17AD8 /* XtreamTv */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				87386E9B2D77EB4200C17AD8 /* Exceptions for "XtreamTv" folder in "XtreamTv" target */,
+			);
 			path = XtreamTv;
 			sourceTree = "<group>";
 		};
@@ -252,8 +265,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"XtreamTv/Preview Content\"";
+				DEVELOPMENT_TEAM = 6Q95QLZS6W;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = XtreamTv/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -280,8 +295,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"XtreamTv/Preview Content\"";
+				DEVELOPMENT_TEAM = 6Q95QLZS6W;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = XtreamTv/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
